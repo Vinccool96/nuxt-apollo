@@ -1,8 +1,5 @@
 {
     "private": true,
     "version": "0.0.0",
-    "name": "nuxt-apollo-playground",
-    "dependencies": {
-      "@nuxtjs/apollo": "workspace:*"
-    }
+    "name": "nuxt-apollo-playground"
   }

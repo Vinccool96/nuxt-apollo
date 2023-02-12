@@ -108,24 +108,24 @@ export type ClientConfig = {
   cookieAttributes?: CookieAttributes;
 };
 
-export interface NuxtApolloConfig<T = ClientConfig> {
+export interface NuxtApolloConfig {
   /**
    * Determine if vue-apollo composables should be automatically imported.
    * @type {boolean}
    * @default true
    **/
-  autoImports?: boolean;
+  autoImports?: boolean
 
   /**
    * Configuration of the Apollo clients.
    **/
-  clients?: Record< string, T extends boolean ? string | ClientConfig : ClientConfig >;
+  clients?: Record<string, string | ClientConfig>;
 
   /**
    * Default options to be applied to all Apollo clients.
    * This is useful for setting global defaults, and is overridden by `defaultOptions` passed directly to clients.
    **/
-  defaultOptions?: DefaultOptions;
+  defaultOptions?: DefaultOptions
 
   /**
    * Pass cookies from the browser to the GraphQL API in SSR mode.
@@ -133,21 +133,21 @@ export interface NuxtApolloConfig<T = ClientConfig> {
    * @type boolean
    * @default true
    * */
-  proxyCookies?: boolean;
+  proxyCookies?: boolean
 
   /**
    * Specify the Authentication scheme.
    * @type {string}
    * @default 'Bearer'
    **/
-  authType?: string;
+  authType?: string
 
   /**
    * Name of the Authentication token header.
    * @type {string}
    * @default "Authorization"
    */
-  authHeader?: string;
+  authHeader?: string
 
   /**
    * Specify if the auth token should be stored in `cookie` or `localStorage`.
@@ -155,12 +155,12 @@ export interface NuxtApolloConfig<T = ClientConfig> {
    * @type {string}
    * @default "cookie"
    **/
-  tokenStorage?: 'cookie' | 'localStorage';
+  tokenStorage?: 'cookie' | 'localStorage'
 
   /**
    * Configuration for the auth cookie.
    **/
-  cookieAttributes?: CookieAttributes;
+  cookieAttributes?: CookieAttributes
 
   /**
    * Apollo client awareness instructs the client to send two additional headers

@@ -1,7 +1,7 @@
-import { defineBuildConfig } from 'unbuild'
+import { defineBuildConfig } from "unbuild"
 
 export default defineBuildConfig({
   declaration: true,
-  entries: ['src/module'],
-  externals: ['@nuxtjs/apollo']
+  entries: ["src/module"],
+  externals: ["nuxt-apollo"],
 })

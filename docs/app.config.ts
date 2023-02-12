@@ -12,5 +12,5 @@ export default defineAppConfig({
       github: "nuxt-modules/apollo-module",
       twitter: "@nuxt_js",
     },
-  }
-});
+  },
+})

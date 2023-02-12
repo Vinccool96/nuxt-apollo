@@ -9,12 +9,12 @@
     <img alt="CI" src="https://github.com/nuxt-community/apollo-module/actions/workflows/ci.yml/badge.svg?branch=main"/>
   </a> -->
   
-  <a href="https://npmjs.com/package/@nuxtjs/apollo/v/next">
-      <img alt="Version" src="https://img.shields.io/npm/v/@nuxtjs/apollo/next?color=blue&style=flat-square"/>
+  <a href="https://npmjs.com/package/nuxt-apollo/v/next">
+      <img alt="Version" src="https://img.shields.io/npm/v/nuxt-apollo/next?color=blue&style=flat-square"/>
   </a>
   
-  <a href="https://npmjs.com/package/@nuxtjs/apollo/v/next">
-      <img alt="Downloads" src="https://img.shields.io/npm/dt/@nuxtjs/apollo/next?color=blue&style=flat-square"/>
+  <a href="https://npmjs.com/package/nuxt-apollo/v/next">
+      <img alt="Downloads" src="https://img.shields.io/npm/dt/nuxt-apollo/next?color=blue&style=flat-square"/>
   </a>
   
   <a href="https://opensource.org/licenses/MIT">

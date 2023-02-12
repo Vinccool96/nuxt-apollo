@@ -3,19 +3,10 @@
     <main p-4>
       <div flex flex-col gap-4>
         <NCard class="p4">
-          <div class="n-header-upper">
-            GraphQL API
-          </div>
+          <div class="n-header-upper">GraphQL API</div>
 
           <form class="flex gap-3 items-center">
-            <NRadio
-              v-for="entry of apis"
-              :key="entry"
-              v-model="api"
-              :name="entry"
-              :value="entry"
-              n="red6 dark:red5"
-            >
+            <NRadio v-for="entry of apis" :key="entry" v-model="api" :name="entry" :value="entry" n="red6 dark:red5">
               {{ entry }}
             </NRadio>
           </form>
@@ -33,18 +24,16 @@
       </div>
     </main>
 
-    <footer border-t-1 border-slate flex justify-center items-center>
-      @nuxtjs/apollo playground
-    </footer>
+    <footer border-t-1 border-slate flex justify-center items-center>nuxt-apollo playground</footer>
   </div>
 </template>
 
 <script lang="ts" setup>
-const apis = ref(['starlink', 'todos', 'github'])
+const apis = ref(["starlink", "todos", "github"])
 
-const apiCookie = useCookie('apollo_api', { default: () => apis.value[0] })
+const apiCookie = useCookie("apollo_api", { default: () => apis.value[0] })
 const api = ref(apiCookie.value)
-watch(api, value => (apiCookie.value = value))
+watch(api, (value) => (apiCookie.value = value))
 </script>
 
 <style scoped>

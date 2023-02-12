@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtjs/apollo",
+  "name": "nuxt-apollo",
   "version": "5.0.0-alpha.5",
   "license": "MIT",
   "repository": "https://github.com/nuxt-modules/apollo-module",
@@ -15,11 +15,12 @@
   ],
   "scripts": {
     "build": "nuxt-module-build",
-    "prepack": "pnpm build",
+    "prepack": "yarn build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "prepare": "nuxt-module-build --stub && nuxi prepare playground",
-    "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "lint": "eslint --fix {**/*,*}.{js,ts,jsx,tsx,html,vue}",
+    "release": "standard-version --prerelease alpha && git push --follow-tags && yarn publish --tag next"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
@@ -27,27 +28,32 @@
     "@nuxt/module-builder": "^0.2.1",
     "@rollup/plugin-graphql": "^2.0.2",
     "@vue/apollo-composable": "4.0.0-beta.1",
+    "@vue/apollo-option": "^4.0.0-beta.2",
     "cookie-es": "^0.5.0",
     "defu": "^6.1.1",
     "destr": "^1.2.1",
     "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.11.2",
-    "jiti": "^1.15.0",
+    "jiti": "^1.17.0",
     "ohash": "^1.0.0"
   },
   "devDependencies": {
     "@nuxt/ui": "^0.3.3",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@types/node": "^18.13.0",
     "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "nuxt": "^3.0.0",
+    "prettier": "^2.8.4",
     "standard-version": "latest"
   },
   "publishConfig": {
     "access": "public"
   },
   "resolutions": {
-    "@nuxtjs/apollo": "link:."
+    "nuxt-apollo": "link:."
   },
-  "packageManager": "pnpm@7.18.1"
+  "packageManager": "yarn@7.18.1"
 }
