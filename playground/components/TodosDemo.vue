@@ -4,11 +4,11 @@
       <div class="n-header-upper">Todos Example</div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <NButton @click="refresh"> Load Todos </NButton>
+        <NButton @click.prevent="$apollo.queries.todos.refetch()"> Load Todos </NButton>
 
-        <NButton :disabled="!subscribe" @click="createTodo"> Create Todo </NButton>
+        <NButton :disabled="!subscribe" @click.prevent="createTodo"> Create Todo </NButton>
 
-        <NButton :disabled="subscribe" @click="todoAdded"> Subscribe </NButton>
+        <NButton :disabled="subscribe" @click.prevent="todoAdded"> Subscribe </NButton>
       </div>
     </NCard>
 
@@ -20,56 +20,84 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-const gqlTodos = gql`
-  query todo {
-    todos {
-      id
-      text
-    }
-  }
-`
-const gqlCreateTodo = gql`
-  mutation createTodo($todo: TodoInput!) {
-    createTodo(todo: $todo) {
-      id
-    }
-  }
-`
-const gqlTodoAdded = gql`
-  subscription todoAdded {
-    todoAdded {
-      id
-      text
-    }
-  }
-`
+<script lang="ts">
+import { Observable, FetchResult } from "@apollo/client"
 
-const { data, refresh } = await useAsyncQuery(gqlTodos, "todos")
+import { defineNuxtComponent } from "#app"
 
-const { mutate: todoMutation } = useMutation(gqlCreateTodo, { clientId: "todos" })
+import { TodosT } from "~/types"
 
-function createTodo() {
-  todoMutation({
-    todo: {
-      text: "Random " + Math.floor(Math.random() * 100),
+import todosQuery from "~/queries/todos.gql"
+
+export default defineNuxtComponent({
+  data(): {
+    data: string
+    todos: TodosT | null
+    subscribe: boolean
+    observable: Observable<FetchResult<any>> | null
+  } {
+    return {
+      data: "",
+      todos: null,
+      subscribe: false,
+      observable: null,
+    }
+  },
+  watch: {
+    todos(newValue) {
+      this.data = newValue
     },
-  })
-}
+  },
+  methods: {
+    async createTodo() {
+      const a = (
+        await this.$apollo.mutate({
+          client: "todos",
+          mutation: gql`
+            mutation createTodo($todo: TodoInput!) {
+              createTodo(todo: $todo) {
+                id
+              }
+            }
+          `,
+          variables: { todo: { text: "Random " + Math.floor(Math.random() * 100) } },
+        })
+      ).data
+      console.log(a)
+    },
+    todoAdded() {
+      this.subscribe = true
+      const obs = this.$apollo.subscribe({
+        client: "todos",
+        query: gql`
+          subscription todoAdded {
+            todoAdded {
+              id
+              text
+            }
+          }
+        `,
+      })
 
-const subscribe = ref(false)
+      obs.subscribe({
+        next: (data) => {
+          this.data = data.data
+        },
+        error(error) {
+          console.error(error)
+        },
+      })
 
-function todoAdded() {
-  subscribe.value = true
-
-  const { onResult, onError } = useSubscription(gqlTodoAdded, null, { clientId: "todos" })
-
-  onResult((r) => {
-    data.value = r.data as any
-  })
-
-  onError((e) => {
-    console.log(e)
-  })
-}
+      this.observable = obs
+    },
+  },
+  apollo: {
+    $client: "todos",
+    todos() {
+      return {
+        query: todosQuery,
+      }
+    },
+  },
+})
 </script>

@@ -26,6 +26,7 @@
     "@apollo/client": "^3.7.1",
     "@nuxt/kit": "^3.0.0",
     "@nuxt/module-builder": "^0.2.1",
+    "@pinia/nuxt": "^0.4.6",
     "@rollup/plugin-graphql": "^2.0.2",
     "@vue/apollo-composable": "4.0.0-beta.1",
     "@vue/apollo-option": "^4.0.0-beta.2",
@@ -36,7 +37,8 @@
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.11.2",
     "jiti": "^1.17.0",
-    "ohash": "^1.0.0"
+    "ohash": "^1.0.0",
+    "pinia": "^2.0.30"
   },
   "devDependencies": {
     "@nuxt/ui": "^0.3.3",

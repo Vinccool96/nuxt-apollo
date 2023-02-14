@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-// @ts-ignore
 import queryLaunches from "~/queries/launches.gql"
 
 const queryShips = gql`

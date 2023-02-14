@@ -1,19 +1,18 @@
-import destr from "destr"
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from "@apollo/client/core"
 import { Ref } from "vue"
+import { setContext } from "@apollo/client/link/context"
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions"
 import { onError } from "@apollo/client/link/error"
 import { getMainDefinition } from "@apollo/client/utilities"
-import { ApolloClients, provideApolloClients } from "@vue/apollo-composable"
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from "@apollo/client/core"
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions"
-import { setContext } from "@apollo/client/link/context"
+import destr from "destr"
+import { NuxtAppApollo } from "../types"
 
 import createRestartableClient from "./ws"
-import { useApollo } from "./composables"
-import { ref, useCookie, defineNuxtPlugin, useRequestHeaders } from "#imports"
+import { ref, useCookie, useRequestHeaders } from "#imports"
 
 import NuxtApollo from "#apollo"
 
-export default defineNuxtPlugin((nuxtApp) => {
+export function createClients(nuxtApp: NuxtAppApollo) {
   const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(["cookie"])) || undefined
 
   const clients: { [key: string]: ApolloClient<any> } = {}
@@ -149,17 +148,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       cache.restore(destr(JSON.stringify(nuxtApp.payload.data[cacheKey])))
     }
   }
-
-  provideApolloClients(clients)
-  nuxtApp.vueApp.provide(ApolloClients, clients)
   nuxtApp._apolloClients = clients
 
-  const defaultClient = clients?.default
-
-  return {
-    provide: {
-      apolloHelpers: useApollo(),
-      apollo: { clients, defaultClient },
-    },
-  }
-})
+  return clients
+}

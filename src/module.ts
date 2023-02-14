@@ -1,11 +1,10 @@
 import { existsSync } from "fs"
 import jiti from "jiti"
-import { Ref } from "vue"
 import { defu } from "defu"
-import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from "@nuxt/kit"
+import { addImports, addPlugin, addTemplate, createResolver, defineNuxtModule, useLogger } from "@nuxt/kit"
 import GraphQLPlugin from "@rollup/plugin-graphql"
 import { name, version } from "../package.json"
-import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from "./types"
+import type { ClientConfig, ErrorResponse, NuxtApolloConfig } from "./types"
 
 export type { ClientConfig, ErrorResponse }
 
@@ -15,9 +14,13 @@ async function readConfigFile(path: string): Promise<ClientConfig> {
   return await jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
 }
 
-export type ModuleOptions = NuxtApolloConfig
+type ModuleOptions = {
+  vueComponentType: "options" | "composable"
+}
 
-export default defineNuxtModule<ModuleOptions>({
+export type ApolloModuleOptions = NuxtApolloConfig & ModuleOptions
+
+export default defineNuxtModule<ApolloModuleOptions>({
   meta: {
     name,
     version,
@@ -27,6 +30,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   defaults: {
+    vueComponentType: "options",
     autoImports: true,
     authType: "Bearer",
     authHeader: "Authorization",
@@ -120,7 +124,13 @@ export default defineNuxtModule<ModuleOptions>({
         ].join("\n"),
     }).dst
 
-    addPlugin(resolve("runtime/plugin"))
+    if (options.vueComponentType === "composable") {
+      addPlugin(resolve("runtime/pluginComposable"))
+    }
+
+    if (options.vueComponentType === "options") {
+      addPlugin(resolve("runtime/pluginOptions"))
+    }
 
     // TODO: Integrate @vue/apollo-components?
 
@@ -199,20 +209,3 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 export const defineApolloClient = (config: ClientConfig) => config
-
-declare module "#app" {
-  interface RuntimeConfig {
-    // @ts-ignore
-    apollo: NuxtApolloConfig
-
-    // @ts-ignore
-    public: {
-      apollo: NuxtApolloConfig
-    }
-  }
-
-  interface RuntimeNuxtHooks {
-    "apollo:auth": (params: { client: string; token: Ref<string | null> }) => void
-    "apollo:error": (error: ErrorResponse) => void
-  }
-}

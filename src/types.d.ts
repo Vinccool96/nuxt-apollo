@@ -1,15 +1,23 @@
 import type { ClientOptions } from 'graphql-ws'
-import type { ApolloClient, HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
+import type { ApolloClient, DefaultOptions, HttpOptions, InMemoryCacheConfig } from '@apollo/client'
 import type { CookieOptions } from 'nuxt/dist/app/composables'
 import type { RestartableClient } from './runtime/ws'
+import { NuxtApp } from 'nuxt/app'
+import { Ref } from 'vue'
+import { ApolloProvider } from '@vue/apollo-option/types/apollo-provider';
+import { VueApolloComponentOptions } from '@vue/apollo-option/types/options';
+import { DollarApollo } from '@vue/apollo-option/types/vue-apollo';
+
 export type { ErrorResponse } from '@apollo/client/link/error'
 
 type CookieAttributes = Omit< CookieOptions, 'encode' | 'decode' | 'expires' | 'default'>;
 
-export type NuxtAppApollo = Partial<{
+interface PartialNuxtAppApollo {
   _apolloClients?: Record<string, ApolloClient<any>>;
   _apolloWsClients?: Record<string, RestartableClient>;
-}>;
+}
+
+export interface NuxtAppApollo extends PartialNuxtAppApollo, NuxtApp {}
 
 export type ClientConfig = {
   /**
@@ -170,4 +178,76 @@ export interface NuxtApolloConfig {
    * @default false
    */
   clientAwareness?: boolean
+}
+
+declare module "#app" {
+  interface NuxtApp {
+    $apolloProvider: ApolloProvider
+    $apollo: DollarApollo<this>
+  }
+
+  export interface RuntimeConfig {
+    // @ts-ignore
+    apollo: NuxtApolloConfig
+
+    // @ts-ignore
+    public: {
+      apollo: NuxtApolloConfig
+    }
+  }
+
+  export interface RuntimeNuxtHooks {
+    "apollo:auth": (params: { client: string; token: Ref<string | null> }) => void
+    "apollo:error": (error: ErrorResponse) => void
+  }
+}
+
+declare module "vue" {
+  interface ComponentOptionsBase<
+    Props,
+    RawBindings,
+    D,
+    C extends ComputedOptions,
+    M extends MethodOptions,
+    Mixin extends ComponentOptionsMixin,
+    Extends extends ComponentOptionsMixin,
+    E extends EmitsOptions,
+    EE extends string = string,
+    Defaults = {}
+  > {
+    apolloProvider?: ApolloProvider
+    apollo?: VueApolloComponentOptions<
+      CreateComponentPublicInstance<Props, RawBindings, D, C, M, Mixin, Extends, E, Props, Defaults, false>
+    >
+  }
+
+  interface ComponentCustomProperties {
+    $apolloProvider: ApolloProvider
+    $apollo: DollarApollo<this>
+  }
+}
+
+declare module "@vue/runtime-core" {
+  interface ComponentOptionsBase<
+    Props,
+    RawBindings,
+    D,
+    C extends ComputedOptions,
+    M extends MethodOptions,
+    Mixin extends ComponentOptionsMixin,
+    Extends extends ComponentOptionsMixin,
+    E extends EmitsOptions,
+    EE extends string = string,
+    Defaults = {}
+  > {
+    apolloProvider?: ApolloProvider
+    apollo?: VueApolloComponentOptions<
+      CreateComponentPublicInstance<Props, RawBindings, D, C, M, Mixin, Extends, E, Props, Defaults, false>
+    >
+  }
+
+  interface ComponentCustomProperties {
+    $apolloProvider: ApolloProvider
+    $apollo: DollarApollo<this>
+  }
 }

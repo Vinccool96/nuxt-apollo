@@ -36,3 +36,12 @@ export type DiscussionT = {
     }
   }
 }
+
+type TodosTTodo = {
+  id: string
+  text: string
+}
+
+export type TodosT = {
+  todos: Array<TodosTTodo>
+}
