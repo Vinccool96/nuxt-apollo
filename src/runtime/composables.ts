@@ -90,7 +90,13 @@ export type UseApolloType = {
   onLogout(client?: string, skipResetStore?: boolean): Promise<void>
 }
 
+let useApolloResult: UseApolloType | null = null
+
 export function useApollo(): UseApolloType {
+  if (useApolloResult !== null) {
+    return useApolloResult
+  }
+
   const nuxtApp = useNuxtApp() as unknown as NuxtAppApollo
 
   const getToken = async (client?: string) => {
@@ -150,7 +156,7 @@ export function useApollo(): UseApolloType {
       .catch((e) => console.log("%cError on cache reset", "color: orange;", e.message))
   }
 
-  return {
+  useApolloResult = {
     getToken,
 
     clients: nuxtApp?._apolloClients,
@@ -160,4 +166,6 @@ export function useApollo(): UseApolloType {
 
     onLogout: (client?: string, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: "logout" }),
   }
+
+  return useApolloResult
 }

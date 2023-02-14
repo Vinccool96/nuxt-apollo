@@ -14,11 +14,7 @@ async function readConfigFile(path: string): Promise<ClientConfig> {
   return await jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
 }
 
-type ModuleOptions = {
-  vueComponentType: "options" | "composable"
-}
-
-export type ApolloModuleOptions = NuxtApolloConfig & ModuleOptions
+export type ApolloModuleOptions = NuxtApolloConfig
 
 export default defineNuxtModule<ApolloModuleOptions>({
   meta: {
@@ -30,7 +26,6 @@ export default defineNuxtModule<ApolloModuleOptions>({
     },
   },
   defaults: {
-    vueComponentType: "options",
     autoImports: true,
     authType: "Bearer",
     authHeader: "Authorization",
@@ -124,13 +119,9 @@ export default defineNuxtModule<ApolloModuleOptions>({
         ].join("\n"),
     }).dst
 
-    if (options.vueComponentType === "composable") {
-      addPlugin(resolve("runtime/pluginComposable"))
-    }
-
-    if (options.vueComponentType === "options") {
-      addPlugin(resolve("runtime/pluginOptions"))
-    }
+    addPlugin(resolve("runtime/pluginComposable"))
+    addPlugin(resolve("runtime/pluginOptions"))
+    addPlugin(resolve("runtime/pluginProvideApollo"))
 
     // TODO: Integrate @vue/apollo-components?
 

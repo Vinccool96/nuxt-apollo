@@ -21,9 +21,7 @@
     <NCard p-4>
       <div class="n-header-upper">Raw Output</div>
 
-      <pre w-100>
-        {{ JSON.stringify(output, null, 2) }}
-      </pre>
+      <pre w-100>{{ JSON.stringify(output, null, 2) }}</pre>
     </NCard>
   </div>
 </template>
@@ -32,7 +30,9 @@
 import type { ViewerT, DiscussionT } from "~/types"
 import discussions from "~/queries/discussions.gql"
 
-const { getToken, onLogin, onLogout } = useApollo()
+const used = useApollo()
+console.log(used)
+const { getToken, onLogin, onLogout } = used
 
 const githubToken = ref<string | null>(null)
 
